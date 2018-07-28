@@ -6,12 +6,20 @@ input_2_values = [int(x) for x in input_line_2.split(' ')]
 
 base = input_1_values[0]
 
-number_of_integers = input_1_values[1]
+N = input_1_values[1]
 
-integers = input_2_values
+input_digits = input_2_values
+
+powers_list = list(reversed(range(N)))
 
 print('base:', base)
 
-print('number_of_integers:', number_of_integers)
+print('number_of_integers:', N)
 
-print('integer list:', integers)
+print('integer list:', input_digits)
+
+print('powers list:', powers_list)
+
+#converted_digits = [base**]
+
+#print(N)
