@@ -1,0 +1,3 @@
+# ignore the following file types in the hackerrank repository
+
+__pycache__
