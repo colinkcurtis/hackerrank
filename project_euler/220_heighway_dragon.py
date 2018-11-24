@@ -27,9 +27,16 @@ class HeighweyDragon():
         heighwey_dragon = []
         heighwey_dragon.append(d_o)
         for i in range(int(n)):
-            d_i = d_o.replace('a',a_map).replace('b', b_map)
-            heighwey_dragon.append(d_i)
+            d_i = ''
+            for x in d_o:
+                if x == 'a':
+                    d_i += a_map
+                elif x == 'b':
+                    d_i += b_map
+                else:
+                    d_i += x
             d_o = d_i
+            heighwey_dragon.append(d_i)
         return(heighwey_dragon[-1])
     
     def rotation_matrix(self, theta):
@@ -54,28 +61,33 @@ class HeighweyDragon():
     def move_cursor(self, decimal_query_list):
         output = []
         for pair in decimal_query_list:
-            heighwey_dragon = self.make_heighwey_dragon(pair[0])
+            heighwey_dragon = self.make_heighwey_dragon(pair)
             theta_L = math.pi/2
             theta_R = -math.pi/2
             position = (0,0)
             orientation = (0,1)
             rotation_matrix = ()
             steps = pair[1]
-            for i in range(steps):
-                for char in heighwey_dragon:
-                    if char == 'a':
-                        continue
-                    elif char == 'b':
-                        continue
-                    elif char == 'L':
-                        orientation = self.rotate_orientation(theta_L, orientation)
-                        
-                    elif char == 'R':
-                        orientation = self.rotate_orientation(theta_R, orientation)
-                        
-                    else:
-                        position = self.new_position(position, orientation)
+            i = 0
+            while i < steps:
+                for x in heighwey_dragon:
+                    if i >= steps:
                         break
+                    if x == 'F':
+                        new_position = self.new_position(position, orientation)
+                        position = new_position
+                        #print(position)
+                        i += 1
+                    elif x == 'a':
+                        continue
+                    elif x == 'b':
+                        continue
+                    elif x == 'L':
+                        new_orientation = self.rotate_orientation(theta_L, orientation)
+                        orientation = new_orientation
+                    elif x == 'R':
+                        new_orientation = self.rotate_orientation(theta_R, orientation)  
+                        orientation = new_orientation
             output.append(position)
         return output
               
