@@ -61,8 +61,7 @@ class HeighweyDragon():
             orientation = (0,1)
             rotation_matrix = ()
             steps = pair[1]
-            i = 0
-            while i < steps:
+            for i in range(steps):
                 for char in heighwey_dragon:
                     if char == 'a':
                         continue
@@ -70,11 +69,13 @@ class HeighweyDragon():
                         continue
                     elif char == 'L':
                         orientation = self.rotate_orientation(theta_L, orientation)
+                        
                     elif char == 'R':
                         orientation = self.rotate_orientation(theta_R, orientation)
+                        
                     else:
                         position = self.new_position(position, orientation)
-                i += 1
+                        break
             output.append(position)
         return output
               
