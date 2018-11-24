@@ -42,9 +42,15 @@ class HeighweyDragon():
     
     def rotate_orientation(self, theta, orientation):
         rotation_matrix = self.rotation_matrix(theta)
-        orientation[0]
-        
-        
+        new_x = rotation_matrix[0][0]*orientation[0]+rotation_matrix[0][1]*orientation[1]
+        new_y = rotation_matrix[1][0]*orientation[0]+rotation_matrix[1][1]*orientation[1]
+        new_orientation = (new_x, new_y)
+        return new_orientation
+    
+    def new_position(self, position, orientation):
+        new_position = ((position[0]+orientation[0]), (position[1]+orientation[1]))
+        return new_position
+                        
     def move_cursor(self, decimal_query_list):
         output = []
         for pair in decimal_query_list:
@@ -55,6 +61,7 @@ class HeighweyDragon():
             orientation = (0,1)
             rotation_matrix = ()
             steps = pair[1]
+            i = 0
             while i < steps:
                 for char in heighwey_dragon:
                     if char == 'a':
@@ -62,17 +69,17 @@ class HeighweyDragon():
                     elif char == 'b':
                         continue
                     elif char == 'L':
-                        orientation = self.rotation_orientation(theta_L, orientation)
+                        orientation = self.rotate_orientation(theta_L, orientation)
                     elif char == 'R':
-                        orientation = self.rotation_orientation(theta_R, orientation)
+                        orientation = self.rotate_orientation(theta_R, orientation)
                     else:
-                        position = position + orientation
+                        position = self.new_position(position, orientation)
                 i += 1
             output.append(position)
         return output
-            
-            
+              
 if fileinput.input():
+    
     HeighweyDragonObject = HeighweyDragon()
     
     inputs = HeighweyDragonObject.getinput(fileinput.input())
@@ -81,8 +88,6 @@ if fileinput.input():
     
     decimal_query_list = HeighweyDragonObject.decimal_query_list(query_list)
     
-    print(decimal_query_list)
+    moved_cursor = HeighweyDragonObject.move_cursor(decimal_query_list)
     
-    rotation_array = HeighweyDragonObject.rotation_matrix(math.pi/2)
-    
-    print(rotation_array)
+    print(moved_cursor)
