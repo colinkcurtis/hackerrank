@@ -1,5 +1,6 @@
 import fileinput
 import asyncio
+import math
 
 class HeighweyDragon():
     def __init__(self):
@@ -29,8 +30,48 @@ class HeighweyDragon():
             d_i = d_o.replace('a',a_map).replace('b', b_map)
             heighwey_dragon.append(d_i)
             d_o = d_i
-        return(heighwey_dragon)
+        return(heighwey_dragon[-1])
     
+    def rotation_matrix(self, theta):
+        A = round(math.cos(theta))
+        B = round(-math.sin(theta))
+        C = round(math.sin(theta))
+        D = round(math.cos(theta))
+        rotation_matrix=[(A,B),(C,D)]
+        return rotation_matrix
+    
+    def rotate_orientation(self, theta, orientation):
+        rotation_matrix = self.rotation_matrix(theta)
+        orientation[0]
+        
+        
+    def move_cursor(self, decimal_query_list):
+        output = []
+        for pair in decimal_query_list:
+            heighwey_dragon = self.make_heighwey_dragon(pair[0])
+            theta_L = math.pi/2
+            theta_R = -math.pi/2
+            position = (0,0)
+            orientation = (0,1)
+            rotation_matrix = ()
+            steps = pair[1]
+            while i < steps:
+                for char in heighwey_dragon:
+                    if char == 'a':
+                        continue
+                    elif char == 'b':
+                        continue
+                    elif char == 'L':
+                        orientation = self.rotation_orientation(theta_L, orientation)
+                    elif char == 'R':
+                        orientation = self.rotation_orientation(theta_R, orientation)
+                    else:
+                        position = position + orientation
+                i += 1
+            output.append(position)
+        return output
+            
+            
 if fileinput.input():
     HeighweyDragonObject = HeighweyDragon()
     
@@ -40,6 +81,8 @@ if fileinput.input():
     
     decimal_query_list = HeighweyDragonObject.decimal_query_list(query_list)
     
-    make_heighwey_dragon = HeighweyDragonObject.make_heighwey_dragon(decimal_query_list[0])
+    print(decimal_query_list)
     
-    print(make_heighwey_dragon)
+    rotation_array = HeighweyDragonObject.rotation_matrix(math.pi/2)
+    
+    print(rotation_array)
