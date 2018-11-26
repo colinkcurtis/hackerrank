@@ -56,25 +56,12 @@ class HeighweyDragon():
         h_start = time.time()
         d_o = 'Fa'
         n = pair[0]
-        for i in range(int(n)):
+        steps = pair[1]
+        needed_steps = math.ceil(math.sqrt(steps))
+        print(steps, needed_steps, n)
+        for i in range(int(needed_steps)):
             string_0_mod = d_o[::-1]
-            string_0_mod_list = list(string_0_mod)
-            for index, letter in enumerate(string_0_mod_list):
-                if letter in ('b'):
-                    string_0_mod_list[index] = 'a'
-                    continue
-                elif letter in ('a'):
-                    string_0_mod_list[index] = 'b'
-                    continue
-                elif letter in ('L'):
-                    string_0_mod_list[index] = 'R'
-                    continue
-                elif letter in ('R'):
-                    string_0_mod_list[index] = 'L'
-                    continue
-                else:
-                    continue
-            flipped_reversed_string_0 = ''.join(string_0_mod_list)
+            flipped_reversed_string_0 = string_0_mod.translate({ord("a"): "b", ord("b"): "a", ord("L"): "R", ord("R"): "L"})
             d_n = d_o+'R'+flipped_reversed_string_0+'R'
             d_o = d_n
         h_end = time.time()
