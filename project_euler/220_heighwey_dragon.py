@@ -1,6 +1,11 @@
 import fileinput
 import time
 import math
+import sys
+import memory_profiler
+import os
+import zlib
+import gc
 
 class HeighweyDragon():
     def __init__(self):
@@ -8,8 +13,9 @@ class HeighweyDragon():
     
     def getinput(self, input):
         #input_list = [line.rstrip() for line in input]
-        input_list = [line.rstrip() for line in open(input)]
-        #print(input_list)
+        #import pdb; pdb.set_trace()
+        input_list = []
+        input_list = [line.rstrip() for line in open(input) if line]
         return input_list
     
     def make_query_list(self, inputs):
@@ -21,52 +27,39 @@ class HeighweyDragon():
         decimal_query_list = [(x[0], int(x[1], base=16)) for x in query_list]
         return decimal_query_list
 
-    # def make_heighwey_dragon(self, pair):
-    #     h_start = time.time()
-    #     a_map = 'aRbFR'
-    #     b_map = 'LFaLb'
-    #     d_o = 'Fa'
-    #     n = pair[0]
-    #     heighwey_dragon = []
-    #     heighwey_dragon.append(d_o)
-    #     for i in range(int(n)):
-    #         d_list = []
-    #         seq_list = []
-    #         for index, x in enumerate(d_o):
-    #             if x in ('a'):
-    #                 d_list.append(a_map)
-    #             elif x in ('b'):
-    #                 d_list.append(b_map)
-    #             else:
-    #                 d_list.append(x)
-    #                 if index < 200:
-    #                     if x in ('L'):
-    #                         seq_list.append(index)
-    #         d_list = ''.join(d_list)
-    #         heighwey_dragon.append(d_list)
-    #         d_o = d_list
-    #         #if i == 3:
-    #             #print(heighwey_dragon)
-    #     h_end = time.time()
-    #     #print('old method time:', h_end-h_start)
-    #     return(heighwey_dragon[-1], seq_list)
-    
+    def flipped_reversed_string_0(self, string_0_mod):
+        flipped_reversed_string_0 = string_0_mod.translate({ord("a"): "b", ord("b"): "a", ord("L"): "R", ord("R"): "L"})
+        return flipped_reversed_string_0
+
+    def string_flip(self, d_o):
+        string_0_mod = d_o[::-1]
+        return string_0_mod
+    #
+    @profile
     def make_heighwey_dragon_by_sequences(self, pair):
-        #STILL THE SLOWEST PART
-        h_start = time.time()
-        d_o = 'Fa'
-        n = pair[0]
+        time1 = time.time()
+        d_o = str()
+        d_o = 'Fa'.encode('utf-8')
+        d_o_compressed = zlib.compress(d_o, 1)
+        d_o_list = []
+        d_o_list.append(d_o_compressed)
         steps = pair[1]
-        needed_steps = math.ceil(math.sqrt(steps))
-        print(steps, needed_steps, n)
-        for i in range(int(needed_steps)):
-            string_0_mod = d_o[::-1]
-            flipped_reversed_string_0 = string_0_mod.translate({ord("a"): "b", ord("b"): "a", ord("L"): "R", ord("R"): "L"})
-            d_n = d_o+'R'+flipped_reversed_string_0+'R'
-            d_o = d_n
-        h_end = time.time()
-        print('new method time:', h_end-h_start)
-        return d_n
+        sqrt_steps = math.ceil(math.sqrt(steps))
+        for i in range(int(sqrt_steps)):
+            #previous_string = zlib.decompress(d_o_list[i-1]).decode()
+            #flipped_string = self.string_flip(previous_string)
+            #flipped_reversed_string_0 = self.flipped_reversed_string_0(flipped_string)
+            flipped_reversed_string_0 = self.flipped_reversed_string_0(self.string_flip(zlib.decompress(d_o_list[i-1]).decode()))
+            #compressed_new_string = zlib.compress((previous_string+'R'+flipped_reversed_string_0+'R').encode('utf-8'),1)
+            compressed_new_string = zlib.compress((zlib.decompress(d_o_list[i-1]).decode()+'R'+flipped_reversed_string_0+'R').encode('utf-8'), 1)
+            flipped_reversed_string_0 = None
+            d_o_list.append(compressed_new_string)
+            compressed_new_string = None
+        time2 = time.time()
+        heighwey_time = time2-time1
+        print('time:', heighwey_time)
+        last_string = zlib.decompress(d_o_list[-1]).decode()
+        return last_string
 
     def rotation_matrix(self, theta):
         A = round(math.cos(theta))
@@ -129,7 +122,9 @@ class HeighweyDragon():
 #             print(hex(y).replace('0x','').upper())
 
 if __name__ == '__main__':
+
     HeighweyDragonObject = HeighweyDragon()
+    gc.collect()
     inputs = HeighweyDragonObject.getinput('test_input.txt')
     query_list = HeighweyDragonObject.make_query_list(inputs)
     decimal_query_list = HeighweyDragonObject.decimal_query_list(query_list)
